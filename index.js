@@ -6,13 +6,6 @@ const express = require('express'),
 
 let movies = [
   {
-    Genre: { name: 'Sci-Fi' },
-    Director: {
-      name: 'George Lucas',
-      born: '1944-05-14',
-      deathyear: 'N/A',
-      bio: 'George Lucas is an American film director, producer, and screenwriter, best known for creating the Star Wars and Indiana Jones franchises. He is the founder of Lucasfilm and Industrial Light [&] Magic.',
-    },
     _id: '665193d02ccaed80dfcdce02',
     Title: 'Star Wars - Revenge of the Sith',
     Description:
@@ -22,15 +15,15 @@ let movies = [
       'https://upload.wikimedia.org/wikipedia/en/9/94/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg',
     Rating: 7.5,
     Featured: true,
+    Genre: { name: 'Sci-Fi' },
+    Director: {
+      Name: 'George Lucas',
+      Born: '1944-05-14',
+      Death: 'N/A',
+      Bio: 'George Lucas is an American film director, producer, and screenwriter, best known for creating the Star Wars and Indiana Jones franchises. He is the founder of Lucasfilm and Industrial Light [&] Magic.',
+    },
   },
   {
-    Genre: { name: 'Drama' },
-    Director: {
-      name: 'Francis Ford Coppola',
-      born: '1939-04-07',
-      deathyear: 'N/A',
-      bio: 'Francis Ford Coppola is an American film director, producer, and screenwriter. He is considered one of the major figures of the New Hollywood movement, known for directing the critically acclaimed The Godfather trilogy and Apocalypse Now. Coppola has won multiple Academy Awards and is renowned for his impact on the history of cinema.',
-    },
     _id: '665193d02ccaed80dfcdce03',
     Title: 'The Godfather',
     Description:
@@ -40,6 +33,13 @@ let movies = [
       'https://upload.wikimedia.org/wikipedia/en/1/1c/Godfather_ver1.jpg',
     Rating: 9.2,
     Featured: true,
+    Genre: { name: 'Drama' },
+    Director: {
+      Name: 'Francis Ford Coppola',
+      Born: '1939-04-07',
+      Death: 'N/A',
+      Bio: 'Francis Ford Coppola is an American film director, producer, and screenwriter. He is considered one of the major figures of the New Hollywood movement, known for directing the critically acclaimed The Godfather trilogy and Apocalypse Now. Coppola has won multiple Academy Awards and is renowned for his impact on the history of cinema.',
+    },
   },
   /*   {
     title: 'Titanic',
@@ -87,13 +87,6 @@ let movies = [
     realeased: '31.03.1999',
   }, */
   {
-    Genre: { name: 'Drama' },
-    Director: {
-      name: 'Steven Spielberg',
-      born: '1946-12-18',
-      deathyear: 'N/A',
-      bio: "Steven Spielberg is an American film director, producer, and screenwriter. He is one of the most influential filmmakers in the history of cinema, known for directing blockbuster films like Jaws, E.T. the Extra-Terrestrial, and Jurassic Park, as well as critically acclaimed dramas such as Schindler's List and Saving Private Ryan. Spielberg's films have grossed over $10 billion worldwide, making him the highest-grossing director of all time. He has won numerous awards, including three Academy Awards and a multitude of Golden Globes and BAFTAs.",
-    },
     _id: '665193d02ccaed80dfcdce04',
     Title: "Schindler's List",
     Description:
@@ -103,74 +96,66 @@ let movies = [
       'https://upload.wikimedia.org/wikipedia/en/3/38/Schindler%27s_List_movie.jpg',
     Rating: 9.0,
     Featured: true,
+    Genre: { name: 'Drama' },
+    Director: {
+      Name: 'Steven Spielberg',
+      Born: '1946-12-18',
+      Death: 'N/A',
+      Bio: "Steven Spielberg is an American film director, producer, and screenwriter. He is one of the most influential filmmakers in the history of cinema, known for directing blockbuster films like Jaws, E.T. the Extra-Terrestrial, and Jurassic Park, as well as critically acclaimed dramas such as Schindler's List and Saving Private Ryan. Spielberg's films have grossed over $10 billion worldwide, making him the highest-grossing director of all time. He has won numerous awards, including three Academy Awards and a multitude of Golden Globes and BAFTAs.",
+    },
   },
 ];
-
-/* let user = [
+let user = [
   {
     id: 1,
-    name: 'Leo Khan',
+    name: 'Leo',
     email: 'leo.khan@example.com',
-    favoriteMovie: ['The Godfather'],
+    favoriteMovies: ['The Godfather'],
   },
   {
     id: 2,
-    name: 'Joe Goldsand',
+    name: 'Joe',
     email: 'joe.goldsand@example.com',
-    favoriteMovie: ['Star Wars - Revenge of the Sith'],
+    favoriteMovies: ['Star Wars - Revenge of the Sith'],
   },
   {
     id: 3,
-    name: 'Jane Doe',
+    name: 'Jane',
     email: 'jane.doe@example.com',
-    favoriteMovie: ['The Matrix'],
+    favoriteMovies: ['The Matrix'],
   },
   {
     id: 4,
-    name: 'John Smith',
+    name: 'John',
     email: 'john.smith@example.com',
-    favoriteMovie: ['Inception'],
+    favoriteMovies: ['Inception'],
   },
-]; */
+];
 
+// middleware
 app.use(morgan('common'));
 app.use(bodyParser.json());
 
+// GET requests
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
 });
 
-// Serve static files from the 'public' directory
+// serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the documentation.html file at the '/documentation.html' route
+// serve the documentation.html file at the '/documentation.html' route
 app.get('/documentation.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
 });
 
+// read movie list
 app.get('/movies', (req, res) => {
-  res.json(movies);
+  res.status(200).json(movies);
 });
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-
-app.use(bodyParser.json());
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
-});
-
-/* READ
-app.get('/movies', (res, req) => {
+// read single movie
+app.get('/movies/:movie', (req, res) => {
   const { title } = req.params;
   const movie = movies.find((movie) => movie.title === title);
 
@@ -181,6 +166,104 @@ app.get('/movies', (res, req) => {
   }
 });
 
+// read single genre
+app.get('/movies/genre/:genreName', (req, res) => {
+  const { genreName } = req.params;
+  const movie = movies.find((movie) => movie.Genre.name === genreName);
+
+  if (movie && movie.Genre) {
+    res.status(200).json(movie.Genre);
+  } else {
+    res.status(404).send('Genre not found.');
+  }
+});
+
+// read single director
+app.get('/movies/directors/:directorName', (req, res) => {
+  const { directorName } = req.params;
+  const movie = movies.find((movie) => movie.Director.Name === directorName);
+
+  if (movie && movie.Director) {
+    res.status(200).json(movie.Director);
+  } else {
+    res.status(404).send('Director not found.');
+  }
+});
+
+// read user list
+app.get('/users', (req, res) => {
+  res.status(200).json(user);
+});
+
+// read single user
+app.get('/users/:id', (req, res) => {
+  const { name } = req.params;
+  const id = user.find((id) => id.name === name);
+
+  if (id) {
+    res.status(200).json(id);
+  } else {
+    res.status(404).send('User not found.');
+  }
+});
+
+// create new user
+app.post('/users', (req, res) => {
+  const newUser = req.body;
+
+  if (newUser.name) {
+    newUser.id = uuid.v4();
+    users.push(newUser);
+    res.status(201).json(newUser);
+  } else {
+    res.status(404).send('User need a name.');
+  }
+});
+
+// update user
+app.put('/users/:id', (req, res) => {
+  const { id } = req.params;
+  const updatedUser = req.body;
+
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    user.name = updatedUser.name;
+    res.status(200).json(user);
+  } else {
+    res.status(404).send('User not found.');
+  }
+});
+
+// update user's fav movie list
+app.post('/users/:id/:favoriteMovies', (req, res) => {
+  res.send('Add movie to users fav list.');
+});
+
+// delete movie from user's fav list
+app.delete('/users/:id/:favoriteMovies/', (req, res) => {
+  res.send('Successful deleted movie from users fav list.');
+});
+
+// delete user
+app.delete('/users/:id', (req, res) => {
+  res.send('Successful deleted user.');
+});
+
+// encode the url
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+// error-handeling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// listen to requests
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
-}); */
+});
