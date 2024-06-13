@@ -5,12 +5,231 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>myFlix</title>
   </head>
+  <style>
+    *html {
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0 30px;
+      background-color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    p {
+      font-size: 1.2em;
+      line-height: 1.6;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    #infoText {
+      border-radius: 5px;
+      padding: 10px;
+      background-color: transparent;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #f0f0f0;
+      min-width: 90px;
+      font-size: 13px;
+    }
+
+    code {
+      display: block;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+  </style>
+
   <body>
+    <!--  <header>
+      <nav>
+        <ul>
+          <li><a href="/documentation.html">Documentation</a></li>
+        </ul>
+      </nav>
+    </header> -->
+    <h1>API Documentation</h1>
     <div>
-      The web application will provide users with access to information about
-      different movies, directors, and genres. Users will be able to sign up,
-      update their personal information, and create a list of their favorite
-      movies.
+      <p id="infoText">
+        The web application will provide users with access to information about
+        different movies, directors, and genres. Users will be able to sign up,
+        update their personal information, and create a list of their favorite
+        movies.
+      </p>
     </div>
+    <h2>Endpoints</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>HTTP Method</th>
+          <th>URL</th>
+          <th>Business Logic</th>
+          <th>Response</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/movies</td>
+          <td>Return json data of list of all movies.</td>
+          <td>
+            <code>
+              { Genre: { name: 'Sci-Fi' }, Director: { name: 'George Lucas',
+              born: '1944-05-14', deathyear: 'N/A', bio: 'George Lucas is an
+              American film director, producer, and screenwriter, best known for
+              creating the Star Wars and Indiana Jones franchises. He is the
+              founder of Lucasfilm and Industrial Light [&] Magic.', }, _id:
+              '665193d02ccaed80dfcdce02', Title: 'Star Wars - Revenge of the
+              Sith', Description: 'Three years into the Clone Wars, the Jedi
+              rescue Palpatine from Count Dooku. As Obi-Wan pursues a new
+              threat, Anakin acts as a double agent between the Jedi Council and
+              Palpatine and is lured into a sinister plan to rule the galaxy.',
+              ReleaseDate: '2005-05-19', ImageUrl:
+              'https://upload.wikimedia.org/wikipedia/en/9/94/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg',
+              Rating: 7.5, Featured: true, }
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/movies/:movie</td>
+          <td>Return json data of a single movie.</td>
+          <td>
+            <code>
+              { "_id": "665193d02ccaed80dfcdce02", "Title": "Star Wars: Episode
+              III _ Revenge of the Sith", "Description": "Three years into the
+              Clone Wars, the Jedi rescue Palpatine from Count Dooku. As Obi-Wan
+              pursues a new threat, Anakin acts as a double agent between the
+              Jedi Council and Palpatine and is lured into a sinister plan to
+              rule the galaxy.", "ReleaseDate": "2005-05-19", "ImageUrl":
+              "https://upload.wikimedia.org/wikipedia/en/9/94/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg",
+              "Rating": 7.5, "Featured": true, "Genre": { "name": "Sci-Fi" },
+              "Director": { "name": "George Lucas", "born": "1944-05-14",
+              "deathyear": "N/A", "bio": "George Lucas is an American film
+              director, producer, and screenwriter, best known for creating the
+              Star Wars and Indiana Jones franchises. He is the founder of
+              Lucasfilm and Industrial Light [&] Magic." }, }
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/movies/genre/:genreName</td>
+          <td>Return json data of a defined genre.</td>
+          <td>
+            <code>
+              { "name": "Sci-Fi", "description": "Science fiction (sometimes
+              shortened to sci-fi or SF) is a genre of speculative fiction that
+              typically deals with imaginative and futuristic concepts such as
+              advanced science and technology, space exploration, time travel,
+              parallel universes, and extraterrestrial life. It has been called
+              the 'literature of ideas', and often explores the potential
+              consequences of scientific, social, and technological
+              innovations." }
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/movies/director/:directorName</td>
+          <td>Return json data of a selected director.</td>
+          <td>
+            <code>
+              { "name": "Steven Spielberg", "born": "1946-12-18", "deathyear":
+              "N/A", "bio": "Steven Spielberg is an American film director,
+              producer, and screenwriter. He is one of the most influential
+              filmmakers in the history of cinema, known for directing
+              blockbuster films like Jaws, E.T. the Extra-Terrestrial, and
+              Jurassic Park, as well as critically acclaimed dramas such as
+              Schindler's List and Saving Private Ryan. Spielberg's films have
+              grossed over $10 billion worldwide, making him the
+              highest-grossing director of all time. He has won numerous awards,
+              including three Academy Awards and a multitude of Golden Globes
+              and BAFTAs." }
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/users</td>
+          <td>Return json data of users list.</td>
+          <td>
+            <code>
+              { "id": 1, "name": "Leo", "email": "leo.khan@example.com",
+              "favoriteMovie": [ "The Godfather" ] }
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users</td>
+          <td>Create a new user.</td>
+          <td>
+            <code>
+              {name: 'Marc', email: 'marc.green@example.com', favoriteMovies:
+              ['Schindler's List'], },
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/users/:id</td>
+          <td>Return json object of a single user by id.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>PUT</td>
+          <td>/users/:id</td>
+          <td>Update a user.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users/:id/:favoriteMovies</td>
+          <td>
+            Add movie to a user's list of favorites with reference to the movie
+            id.
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:id</td>
+          <td>Delete a user</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:id/:favoriteMovies</td>
+          <td>Delete a movie from a user's list of favorites.</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
