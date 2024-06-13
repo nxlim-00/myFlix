@@ -2,11 +2,11 @@ const express = require('express'),
   app = express(),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
-  path = require('path');
+  path = require('path'),
+  uuid = require('uuid');
 
 let movies = [
   {
-    _id: '665193d02ccaed80dfcdce02',
     Title: 'Star Wars - Revenge of the Sith',
     Description:
       'Three years into the Clone Wars, the Jedi rescue Palpatine from Count Dooku. As Obi-Wan pursues a new threat, Anakin acts as a double agent between the Jedi Council and Palpatine and is lured into a sinister plan to rule the galaxy.',
@@ -24,7 +24,6 @@ let movies = [
     },
   },
   {
-    _id: '665193d02ccaed80dfcdce03',
     Title: 'The Godfather',
     Description:
       'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',
@@ -41,53 +40,7 @@ let movies = [
       Bio: 'Francis Ford Coppola is an American film director, producer, and screenwriter. He is considered one of the major figures of the New Hollywood movement, known for directing the critically acclaimed The Godfather trilogy and Apocalypse Now. Coppola has won multiple Academy Awards and is renowned for his impact on the history of cinema.',
     },
   },
-  /*   {
-    title: 'Titanic',
-    cast: 'Leonardo DiCaprio, Kate Winslet',
-    director: 'James Cameron',
-    realeased: '19.12.1997',
-  },
   {
-    title: 'Inception',
-    cast: 'Leonardo DiCaprio, Joseph Gordon-Levitt',
-    director: 'Christopher Nolan',
-    realeased: '16.07.2010',
-  },
-
-  {
-    title: 'Pulp Fiction',
-    cast: 'John Travolta, Samuel L. Jackson',
-    director: 'Quentin Tarantino',
-    realeased: '14.10.1994',
-  },
-  {
-    title: 'The Dark Knight',
-    cast: 'Christian Bale, Heath Ledger',
-    director: 'Christopher Nolan',
-    realeased: '18.07.2008',
-  },
-  {
-    title: 'Forrest Gump',
-    cast: 'Tom Hanks, Robin Wright',
-    director: 'Robert Zemeckis',
-    realeased: '6.07.1994',
-  },
-
-  {
-    title: 'The Lord of the Rings: The Fellowship of the Ring ',
-    cast: 'Elijah Wood, Ian McKellen',
-    director: 'Peter Jackson',
-    realeased: '19.12.2001',
-  },
-
-  {
-    title: 'The Matrix',
-    cast: 'Keanu Reeves, Laurence Fishburne',
-    director: 'The Wachowskis',
-    realeased: '31.03.1999',
-  }, */
-  {
-    _id: '665193d02ccaed80dfcdce04',
     Title: "Schindler's List",
     Description:
       'In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.',
@@ -105,12 +58,12 @@ let movies = [
     },
   },
 ];
-let user = [
+let users = [
   {
     id: 1,
     name: 'Leo',
     email: 'leo.khan@example.com',
-    favoriteMovies: ['The Godfather'],
+    favoriteMovies: [],
   },
   {
     id: 2,
@@ -122,7 +75,7 @@ let user = [
     id: 3,
     name: 'Jane',
     email: 'jane.doe@example.com',
-    favoriteMovies: ['The Matrix'],
+    favoriteMovies: [],
   },
   {
     id: 4,
@@ -149,12 +102,12 @@ app.get('/documentation.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
 });
 
-// read movie list
+// READ movie list
 app.get('/movies', (req, res) => {
   res.status(200).json(movies);
 });
 
-// read single movie
+// READ single movie
 app.get('/movies/:movie', (req, res) => {
   const { title } = req.params;
   const movie = movies.find((movie) => movie.title === title);
@@ -162,52 +115,42 @@ app.get('/movies/:movie', (req, res) => {
   if (movie) {
     res.status(200).json(movie);
   } else {
-    res.status(404).send('Movie not found.');
+    res.status(400).send('Movie not found.');
   }
 });
 
-// read single genre
+// READ single genre
 app.get('/movies/genre/:genreName', (req, res) => {
   const { genreName } = req.params;
-  const movie = movies.find((movie) => movie.Genre.name === genreName);
+  const genre = movies.find((movie) => movie.Genre.name === genreName).Genre;
 
-  if (movie && movie.Genre) {
-    res.status(200).json(movie.Genre);
+  if (genre) {
+    res.status(200).json(genre);
   } else {
-    res.status(404).send('Genre not found.');
+    res.status(400).send('Genre not found.');
   }
 });
 
-// read single director
+// READ single director
 app.get('/movies/directors/:directorName', (req, res) => {
   const { directorName } = req.params;
-  const movie = movies.find((movie) => movie.Director.Name === directorName);
+  const director = movies.find(
+    (movie) => movie.Director.Name === directorName
+  ).Director;
 
-  if (movie && movie.Director) {
-    res.status(200).json(movie.Director);
+  if (director) {
+    res.status(200).json(director);
   } else {
-    res.status(404).send('Director not found.');
+    res.status(400).send('Director not found.');
   }
 });
 
-// read user list
+// READ user list
 app.get('/users', (req, res) => {
   res.status(200).json(user);
 });
 
-// read single user
-app.get('/users/:id', (req, res) => {
-  const { name } = req.params;
-  const id = user.find((id) => id.name === name);
-
-  if (id) {
-    res.status(200).json(id);
-  } else {
-    res.status(404).send('User not found.');
-  }
-});
-
-// create new user
+// CREATE new user
 app.post('/users', (req, res) => {
   const newUser = req.body;
 
@@ -216,11 +159,11 @@ app.post('/users', (req, res) => {
     users.push(newUser);
     res.status(201).json(newUser);
   } else {
-    res.status(404).send('User need a name.');
+    res.status(400).send('User need a name.');
   }
 });
 
-// update user
+// UPDATE user
 app.put('/users/:id', (req, res) => {
   const { id } = req.params;
   const updatedUser = req.body;
@@ -231,23 +174,52 @@ app.put('/users/:id', (req, res) => {
     user.name = updatedUser.name;
     res.status(200).json(user);
   } else {
-    res.status(404).send('User not found.');
+    res.status(400).send('User not found.');
   }
 });
 
-// update user's fav movie list
-app.post('/users/:id/:favoriteMovies', (req, res) => {
-  res.send('Add movie to users fav list.');
+// CREATE user's fav movie list
+app.post('/users/:id/:movieTitle', (req, res) => {
+  const { id, movieTitle } = req.params;
+
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    user.favoriteMovies.push(movieTitle);
+    res.status(200).send(`${movieTitle} has been added to ${id}'s list.`);
+  } else {
+    res.status(400).send('List not found.');
+  }
 });
 
-// delete movie from user's fav list
-app.delete('/users/:id/:favoriteMovies/', (req, res) => {
-  res.send('Successful deleted movie from users fav list.');
+// DELETE movie from user's fav list
+app.delete('/users/:id/:movieTitle', (req, res) => {
+  const { id, movieTitle } = req.params;
+
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    user.favoriteMovies = user.favoriteMovies.filter(
+      (title) => title !== movieTitle
+    );
+    res.status(200).send(`${movieTitle} has been removed from ${id}'s list.`);
+  } else {
+    res.status(400).send('List not found.');
+  }
 });
 
-// delete user
+// DELETE user
 app.delete('/users/:id', (req, res) => {
-  res.send('Successful deleted user.');
+  const { id } = req.params;
+
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    users = users.filter((user) => user.id != id);
+    res.status(200).send(`user ${id} has been deleted`);
+  } else {
+    res.status(400).send('User not found.');
+  }
 });
 
 // encode the url
