@@ -86,64 +86,53 @@
     <table>
       <thead>
         <tr>
-          <th>HTTP Method</th>
-          <th>URL</th>
-          <th>Business Logic</th>
-          <th>Response</th>
+          <th>Description of Endpoint Return</th>
+          <th>Method Type</th>
+          <th>Endpoint URL</th>
+          <th>Format of Request Data</th>
+          <th>Format of Response Data</th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td>Return a list of all movies.</td>
           <td>GET</td>
           <td>/movies</td>
-          <td>Return json data of list of all movies.</td>
+          <td>None</td>
           <td>
-            <code>
-              { Genre: { name: 'Sci-Fi' }, Director: { name: 'George Lucas',
-              born: '1944-05-14', deathyear: 'N/A', bio: 'George Lucas is an
-              American film director, producer, and screenwriter, best known for
-              creating the Star Wars and Indiana Jones franchises. He is the
-              founder of Lucasfilm and Industrial Light [&] Magic.', }, _id:
-              '665193d02ccaed80dfcdce02', Title: 'Star Wars - Revenge of the
-              Sith', Description: 'Three years into the Clone Wars, the Jedi
-              rescue Palpatine from Count Dooku. As Obi-Wan pursues a new
-              threat, Anakin acts as a double agent between the Jedi Council and
-              Palpatine and is lured into a sinister plan to rule the galaxy.',
-              ReleaseDate: '2005-05-19', ImageUrl:
-              'https://upload.wikimedia.org/wikipedia/en/9/94/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg',
-              Rating: 7.5, Featured: true, }
-            </code>
+            <code> A data list of all movies in a json object. </code>
           </td>
         </tr>
         <tr>
+          <td>Return json data about a single movie by title.</td>
           <td>GET</td>
-          <td>/movies/:movie</td>
-          <td>Return json data of a single movie.</td>
+          <td>/movies/:Title</td>
+          <td>None</td>
           <td>
             <code>
-              { "_id": "665193d02ccaed80dfcdce02", "Title": "Star Wars: Episode
-              III _ Revenge of the Sith", "Description": "Three years into the
-              Clone Wars, the Jedi rescue Palpatine from Count Dooku. As Obi-Wan
-              pursues a new threat, Anakin acts as a double agent between the
-              Jedi Council and Palpatine and is lured into a sinister plan to
-              rule the galaxy.", "ReleaseDate": "2005-05-19", "ImageUrl":
-              "https://upload.wikimedia.org/wikipedia/en/9/94/Star_Wars_Episode_III_Revenge_of_the_Sith_poster.jpg",
-              "Rating": 7.5, "Featured": true, "Genre": { "name": "Sci-Fi" },
-              "Director": { "name": "George Lucas", "born": "1944-05-14",
-              "deathyear": "N/A", "bio": "George Lucas is an American film
-              director, producer, and screenwriter, best known for creating the
-              Star Wars and Indiana Jones franchises. He is the founder of
-              Lucasfilm and Industrial Light [&] Magic." }, }
+              {"_id":{"$oid":"666f43d3f95cb4c08c90deff"},"Title":"The Shawshank
+              Redemption","Description":"Over the course of several years, two
+              convicts form a friendship, seeking consolation and, eventually,
+              redemption through basic compassion, decency, and
+              hope.","Genre":{"Name":"Drama","Description":"Drama is a genre of
+              narrative fiction intended to be more serious than humorous in
+              tone. Dramas often focus on character development and emotional
+              themes."},"Director":{"Name":"Frank Darabont","Bio":"Frank
+              Darabont is a Hungarian-American film director, screenwriter, and
+              producer who has been nominated for three Academy Awards and a
+              Golden Globe
+              Award.","Birth":"1959","Death":"N/A"},"ImagePath":"shawshankredemption.png","Featured":true}
             </code>
           </td>
         </tr>
         <tr>
+          <td>Return json data about a genre (description) by name/title.</td>
           <td>GET</td>
           <td>/movies/genre/:genreName</td>
-          <td>Return json data of a defined genre.</td>
+          <td>None</td>
           <td>
             <code>
-              { "name": "Sci-Fi", "description": "Science fiction (sometimes
+              { "Name": "Sci-Fi", "Description": "Science fiction (sometimes
               shortened to sci-fi or SF) is a genre of speculative fiction that
               typically deals with imaginative and futuristic concepts such as
               advanced science and technology, space exploration, time travel,
@@ -155,9 +144,10 @@
           </td>
         </tr>
         <tr>
+          <td>Return json data of a single director by name.</td>
           <td>GET</td>
           <td>/movies/director/:directorName</td>
-          <td>Return json data of a selected director.</td>
+          <td>None</td>
           <td>
             <code>
               { "name": "Steven Spielberg", "born": "1946-12-18", "deathyear":
@@ -175,59 +165,102 @@
           </td>
         </tr>
         <tr>
+          <td>Return json data of users list.</td>
           <td>GET</td>
           <td>/users</td>
-          <td>Return json data of users list.</td>
+
           <td>
-            <code>
-              { "id": 1, "name": "Leo", "email": "leo.khan@example.com",
-              "favoriteMovie": [ "The Godfather" ] }
-            </code>
+            <code> A data list of all users in a json object. </code>
           </td>
         </tr>
         <tr>
+          <td>Create a new user.</td>
           <td>POST</td>
           <td>/users</td>
-          <td>Create a new user.</td>
+
           <td>
             <code>
-              {name: 'Marc', email: 'marc.green@example.com', favoriteMovies:
-              ['Schindler's List'], },
+              { "Username": "test123", "Password": "1234", "Email":
+              "test@example.com", "Birthday": "01/01/1990" }
+            </code>
+          </td>
+          <td>
+            <code>
+              { "Username": "test123", "Password": "1234", "Email":
+              "test@example.com", "FavoriteMovies": [], "_id":
+              "667194eacbbe89f64dee4a5a", "__v": 0 }
             </code>
           </td>
         </tr>
         <tr>
+          <td>Return json object of a single user by username.</td>
           <td>GET</td>
           <td>/users/:Username</td>
-          <td>Return json object of a single user by id.</td>
-          <td></td>
+
+          <td>None</td>
+          <td>
+            <code
+              >{ "Username": "test123", "Password": "1234", "Email":
+              "test@example.com", "FavoriteMovies": [], "_id":
+              "667194eacbbe89f64dee4a5a", "__v": 0 }
+            </code>
+          </td>
         </tr>
         <tr>
+          <td>Update a user by username.</td>
           <td>PUT</td>
-          <td>/users/:id</td>
-          <td>Update a user.</td>
-          <td></td>
+          <td>/users/:Username</td>
+
+          <td>
+            <code>
+              { "Username": "test123", "Password": "56789", "Email":
+              "test@example.com", "Birthday": "01/01/1990" }
+            </code>
+          </td>
+          <td>
+            <code>
+              { "_id": "667194eacbbe89f64dee4a5a", "Username": "test123",
+              "Password": "56789", "Email": "test@example.com",
+              "FavoriteMovies": [], "__v": 0, "Birthday":
+              "1989-12-31T23:00:00.000Z" }
+            </code>
+          </td>
         </tr>
         <tr>
+          <td>Add movie to a user's favitorie movie list by movie id.</td>
           <td>POST</td>
           <td>/users/:Username/Movies/:MovieID</td>
+
+          <td>/users/test123/movies/667194eacbbe89f64dee4a5a</td>
           <td>
-            Add movie to a user's list of favorites with reference to the movie
-            id.
+            <code
+              >{ "_id": "667194eacbbe89f64dee4a5a", "Username": "test123",
+              "Password": "5678", "Email": "test@example.com", "FavoriteMovies":
+              [ "666f43d3f95cb4c08c90deff" ], "__v": 0, "Birthday":
+              "1989-12-31T23:00:00.000Z" }</code
+            >
           </td>
-          <td></td>
         </tr>
         <tr>
-          <td>DELETE</td>
-          <td>/users/:Usernameusers/:id</td>
-          <td>Delete a user</td>
-          <td></td>
-        </tr>
-        <tr>
+          <td>Delete a movie from a user's list of favorites.</td>
           <td>DELETE</td>
           <td>/users/:Username/movies/:MovieID</td>
-          <td>Delete a movie from a user's list of favorites.</td>
-          <td></td>
+          <td>/users/test123/movies/667194eacbbe89f64dee4a5a</td>
+          <td>
+            <code
+              >{ "_id": "667194eacbbe89f64dee4a5a", "Username": "test123",
+              "Password": "5678", "Email": "test@example.com", "FavoriteMovies":
+              [], "__v": 0, "Birthday": "1989-12-31T23:00:00.000Z" }</code
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>Delete a user</td>
+          <td>DELETE</td>
+          <td>/users/:Username</td>
+
+          <td>/users/test123</td>
+          <td>test123 was deleted.</td>
         </tr>
       </tbody>
     </table>
