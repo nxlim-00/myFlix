@@ -109,11 +109,6 @@ app.get(
   '/users',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // CONDITION TO CHECK ADDED HERE
-    if (req.user.Username !== req.params.Username) {
-      return res.status(400).send('Permission denied');
-    }
-    // CONDITION ENDS
     await Users.find()
       .then((users) => {
         res.status(201).json(users);
@@ -130,11 +125,6 @@ app.get(
   '/users/:Username',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // CONDITION TO CHECK ADDED HERE
-    if (req.user.Username !== req.params.Username) {
-      return res.status(400).send('Permission denied');
-    }
-    // CONDITION ENDS
     await Users.findOne({ Username: req.params.Username })
       .then((user) => {
         res.json(user);
