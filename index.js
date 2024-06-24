@@ -4,7 +4,8 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   path = require('path'),
   mongoose = require('mongoose'),
-  Models = require('./models.js');
+  Models = require('./models.js'),
+  { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie,
   Users = Models.User,
@@ -12,6 +13,23 @@ const Movies = Models.Movie,
   Directors = Models.Director;
 
 mongoose.connect('mongodb://127.0.0.1:27017/cfDB');
+
+const cors = require('cors');
+app.use(cors());
+
+// REPLACEMENT FOR "app.use(cors());" when you only wanna allow requests from specific origins
+/* let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+})); */
 
 // middleware
 app.use(morgan('common'));
@@ -137,38 +155,72 @@ app.get(
 );
 
 // 5. Allow new users to register
-app.post('/users', async (req, res) => {
-  await Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.Username + ' already exists.');
-      } else {
-        Users.create({
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday,
-        })
-          .then((user) => {
-            res.status(201).json(user);
+app.post(
+  '/users',
+  [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check(
+      'Username',
+      'Username contains non alphanumeric characters - not allowed.'
+    ).isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail(),
+  ],
+  async (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    await Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          return res.status(400).send(req.body.Username + ' already exists.');
+        } else {
+          Users.create({
+            Username: req.body.Username,
+            Password: hashedPassword,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday,
           })
-          .catch((error) => {
-            console.log(error);
-            res.status(500).send('Error: ' + error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
+            .then((user) => {
+              res.status(201).json(user);
+            })
+            .catch((error) => {
+              console.log(error);
+              res.status(500).send('Error: ' + error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send('Error: ' + error);
+      });
+  }
+);
 
 // 6. Allow users to update their user info (username, password, email, date of birth)
 app.put(
   '/users/:Username',
   passport.authenticate('jwt', { session: false }),
+  [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check(
+      'Username',
+      'Username contains non alphanumeric characters - not allowed.'
+    ).isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail(),
+  ],
   async (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     // CONDITION TO CHECK ADDED HERE
     if (req.user.Username !== req.params.Username) {
       return res.status(400).send('Permission denied');
@@ -282,6 +334,7 @@ app.use((err, req, res, next) => {
 });
 
 // listen to requests
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port ' + port);
 });
