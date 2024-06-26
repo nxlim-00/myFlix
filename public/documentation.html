@@ -185,8 +185,9 @@
           </td>
           <td>
             <code>
-              { "Username": "test123", "Password": "1234", "Email":
-              "test@example.com", "FavoriteMovies": [], "_id":
+              { "Username": "test123", "Password":
+              "$2b$10$IHWzwu6f8Ijo1nlvdPpLse6w1TJUCgRd2C1rK0YgOVAlLJ5.A9sUq",
+              "Email": "test@example.com", "FavoriteMovies": [], "_id":
               "667194eacbbe89f64dee4a5a", "__v": 0 }
             </code>
           </td>
@@ -260,6 +261,22 @@
 
           <td>/users/test123</td>
           <td>test123 was deleted.</td>
+        </tr>
+        <tr>
+          <td>Login with existing user.</td>
+          <td>POST</td>
+          <td>/login</td>
+          <td><code> "Username": "test123", "Password": "5678" </code></td>
+          <td>
+            <code>
+              "user": { "_id": "667af7124c668dcb28d0445c", "Username":
+              "test123", "Password":
+              "$2b$10$IHWzwu6f8Ijo1nlvdPpLse6w1TJUCgRd2C1rK0YgOVAlLJ5.A9sUq",
+              "Email": "test@example.com", "Birthday":
+              "1989-12-31T23:00:00.000Z", "FavoriteMovies": [], "__v": 0 },
+              "token": "..."
+            </code>
+          </td>
         </tr>
       </tbody>
     </table>
