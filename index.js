@@ -67,7 +67,7 @@ app.get(
   async (req, res) => {
     await Movies.find()
       .then((Movies) => {
-        res.status(201).json(Movies);
+        res.status(200).json(Movies);
       })
       .catch((err) => {
         console.log(err);
@@ -231,12 +231,13 @@ app.put(
       return res.status(400).send('Permission denied');
     }
     // CONDITION ENDS
+    let hashedPassword = Users.hashPassword(req.body.Password);
     await Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
         $set: {
           Username: req.body.Username,
-          Password: req.body.Password,
+          Password: hashedPassword,
           Email: req.body.Email,
           Birthday: req.body.Birthday,
         },
@@ -263,10 +264,16 @@ app.post(
       return res.status(400).send('Permission denied');
     }
     // CONDITION ENDS
+    const movie = await Movies.findOne({ _id: req.params.MovieID });
+
+    if (!movie) {
+      return res.status(400).send('No such movie exists.');
+    }
+
     await Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
-        $push: { FavoriteMovies: req.params.MovieID },
+        $addToSet: { FavoriteMovies: req.params.MovieID },
       },
       { new: true } // This line makes sure that the updated document is returned
     )
