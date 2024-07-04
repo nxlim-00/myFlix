@@ -133,6 +133,11 @@ The API is hosted on Heroku at: [https://myflixx-movie-app-2d5cece4bfb1.herokuap
   - Allows existing users to deregister.
   - Authentication required.
   - Example: `https://myflixx-movie-app-2d5cece4bfb1.herokuapp.com/users/johndoe`
+ 
+- **POST /login**
+  - Allows existing users to login with existing data.
+  - Authentication required.
+  - Example: `https://myflixx-movie-app-2d5cece4bfb1.herokuapp.com/login`
 
 ## Error Handling
 
