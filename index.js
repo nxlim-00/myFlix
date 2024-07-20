@@ -256,7 +256,7 @@ app.put(
 
 // 7. Allow users to add a Movie to their list of favorites
 app.post(
-  '/users/:Username/Movies/:MovieID',
+  '/users/:Username/Movies/:movieId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // CONDITION TO CHECK ADDED HERE
@@ -264,7 +264,7 @@ app.post(
       return res.status(400).send('Permission denied');
     }
     // CONDITION ENDS
-    const movie = await Movies.findOne({ _id: req.params.MovieID });
+    const movie = await Movies.findOne({ _id: req.params.movieId });
 
     if (!movie) {
       return res.status(400).send('No such movie exists.');
@@ -273,7 +273,7 @@ app.post(
     await Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
-        $addToSet: { FavoriteMovies: req.params.MovieID },
+        $addToSet: { FavoriteMovies: req.params.movieId },
       },
       { new: true } // This line makes sure that the updated document is returned
     )
@@ -289,7 +289,7 @@ app.post(
 
 // 8. Allow users to remove a Movie from their list of favorites
 app.delete(
-  '/users/:Username/movies/:MovieID',
+  '/users/:Username/movies/:movieId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // CONDITION TO CHECK ADDED HERE
@@ -300,7 +300,7 @@ app.delete(
     await Users.findOneAndUpdate(
       { Username: req.params.Username },
       {
-        $pull: { FavoriteMovies: req.params.MovieID },
+        $pull: { FavoriteMovies: req.params.movieId },
       },
       { new: true } // This line makes sure that the updated document is returned
     )
