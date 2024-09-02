@@ -1,3 +1,7 @@
+/**
+ * @file This script contains the endpoints and the API calls.
+ */
+
 const express = require('express'),
   app = express(),
   morgan = require('morgan'),
@@ -60,17 +64,36 @@ require('./passport');
 // serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// serve the documentation.html file at the '/documentation.html' route
+/**
+ * Serves the documentation.html file at the '/documentation.html' route.
+ */
 app.get('/documentation.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
 });
 
-// default text when "/"
+/**
+ * Default text when accessing the root endpoint "/".
+ */
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
 });
 
-// 1. Return a list of ALL Movies to the user
+/**
+ * This module exports a function that sets up the /movies routes.
+ * @module movies
+ * @param {object} router - The Express router object.
+ */
+
+/**
+ * Return a list of ALL movies to the user.
+ * @name get/movies
+ * @function
+ * @memberof module:movies
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ * @returns {JSON} - A JSON object containing all movies.
+ */
 app.get(
   '/movies',
   passport.authenticate('jwt', { session: false }),
@@ -86,7 +109,16 @@ app.get(
   }
 );
 
-// 2. Return data about a single Movie by title to the user
+/**
+ * Return data about a single movie by title to the user.
+ * @name get/movies/:Title
+ * @function
+ * @memberof module:movies
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ * @returns {JSON} - A JSON object containing movie data.
+ */
 app.get(
   '/movies/:Title',
   passport.authenticate('jwt', { session: false }),
@@ -102,7 +134,16 @@ app.get(
   }
 );
 
-// 3. Return data about a genre by name/title
+/**
+ * Return data about a genre by name/title.
+ * @name get/movies/genre/:genreName
+ * @function
+ * @memberof module:movies
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ * @returns {string} - A string containing the genre description.
+ */
 app.get(
   '/movies/genre/:genreName',
   passport.authenticate('jwt', { session: false }),
@@ -118,7 +159,16 @@ app.get(
   }
 );
 
-// 4. Return data about a director by name
+/**
+ * Return data about a director by name.
+ * @name get/movies/director/:directorName
+ * @function
+ * @memberof module:movies
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ * @returns {string} - A string containing the director's bio.
+ */
 app.get(
   '/movies/director/:directorName',
   passport.authenticate('jwt', { session: false }),
@@ -137,7 +187,22 @@ app.get(
   }
 );
 
-// GET all users
+/**
+ * This module exports a function that sets up the /movies routes.
+ * @module users
+ * @param {object} router - The Express router object.
+ */
+
+/**
+ * Get all users.
+ * @name get/users
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ * @returns {JSON} - A JSON object containing all users.
+ */
 app.get(
   '/users',
   passport.authenticate('jwt', { session: false }),
@@ -153,7 +218,16 @@ app.get(
   }
 );
 
-// GET user by username
+/**
+ * Get user by username.
+ * @name get/users/:Username
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ * @returns {JSON} - A JSON object containing user data.
+ */
 app.get(
   '/users/:Username',
   passport.authenticate('jwt', { session: false }),
@@ -169,7 +243,15 @@ app.get(
   }
 );
 
-// 5. Allow new users to register
+/**
+ * Allow new users to register.
+ * @name post/users
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ */
 app.post(
   '/users',
   [
@@ -216,7 +298,15 @@ app.post(
   }
 );
 
-// 6. Allow users to update their user info (username, password, email, date of birth)
+/**
+ * Allow users to update their user info (username, password, email, date of birth).
+ * @name put/users/:Username
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ */
 app.put(
   '/users/:Username',
   passport.authenticate('jwt', { session: false }),
@@ -264,7 +354,15 @@ app.put(
   }
 );
 
-// 7. Allow users to add a Movie to their list of favorites
+/**
+ * Allow users to add a Movie to their list of favorites.
+ * @name post/users/:Username/Movies/:movieId
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ */
 app.post(
   '/users/:Username/Movies/:movieId',
   passport.authenticate('jwt', { session: false }),
@@ -297,7 +395,15 @@ app.post(
   }
 );
 
-// 8. Allow users to remove a Movie from their list of favorites
+/**
+ * Allow users to remove a Movie from their list of favorites.
+ * @name delete/users/:Username/movies/:movieId
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ */
 app.delete(
   '/users/:Username/movies/:movieId',
   passport.authenticate('jwt', { session: false }),
@@ -324,7 +430,15 @@ app.delete(
   }
 );
 
-// 9. Allow existing users to deregister by username
+/**
+ * Allow existing users to deregister by username.
+ * @name delete/users/:Username
+ * @function
+ * @memberof module:users
+ * @inner
+ * @param {string} path - Express path.
+ * @param {callback} middleware - Express middleware.
+ */
 app.delete(
   '/users/:Username',
   passport.authenticate('jwt', { session: false }),
@@ -349,7 +463,20 @@ app.delete(
   }
 );
 
-// error-handling
+/**
+ * This module exports a function that sets up the /movies routes.
+ * @module errorhandling
+ * @param {object} router - The Express router object.
+ */
+
+/**
+ * Error-handling middleware for the application.
+ * @memberof module:errorhandling
+ * @param {Error} err - The error object.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ */
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
